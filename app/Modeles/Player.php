@@ -5,9 +5,9 @@ namespace App\Modeles;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
-class Personne extends Model {
-    function taches() {
-        return $this->belongsToMany(Tache::class);
+class Player extends Model {
+    function parties() {
+        return $this->hasMany(Partie::class);
     }
 
     function user() {

@@ -1,7 +1,7 @@
 <?php
 
 use App\Modeles\Personne;
-use App\Modeles\Tache;
+use App\Modeles\Partie;
 use Illuminate\Database\Seeder;
 
 class PersonneTacheTableSeeder extends Seeder {
@@ -11,7 +11,7 @@ class PersonneTacheTableSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        $taches = Tache::all();
+        $taches = Partie::all();
         $personnes_id = Personne::all('id')->pluck('id')->toArray();
         $faker = Faker\Factory::create('fr_FR');
 

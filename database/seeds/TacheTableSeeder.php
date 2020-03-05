@@ -1,6 +1,6 @@
 <?php
 
-use App\Modeles\Tache;
+use App\Modeles\Partie;
 use Illuminate\Database\Seeder;
 
 class TacheTableSeeder extends Seeder {
@@ -10,6 +10,6 @@ class TacheTableSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        factory(Tache::class, 20)->create();
+        factory(Partie::class, 20)->create();
     }
 }
