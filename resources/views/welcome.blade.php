@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Projet S4</title>
+        <title>JeuS4</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -64,15 +64,21 @@
         </style>
     </head>
     <body>
+    <h1>Bienvenue sur la MOULAGANG</h1>
         <div class="flex-center position-ref full-height">
-            @if(Auth::user()==null)
-                <a class="lien_menu connect" href="{{ route('login') }}">Se connecter</a>
-                <a class="lien_menu connect" href="{{route('register')}}">S'inscrire</a>
-            @else
-                <a class="lien_menu connect" href="{{ route('logout') }}">Se déconnecter</a>
-                <a class="lien_menu connect" href="{{ route('user') }}">Votre profil</a>
-            @endif
+            @if (Route::has('login'))
+                <div class="top-right links">
+                    @auth
+                        <a href="{{ url('/home') }}">Home</a>
+                    @else
+                        <a href="{{ route('login') }}">Login</a>
 
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}">Register</a>
+                        @endif
+                    @endauth
+                </div>
+            @endif
         </div>
     </body>
 </html>
