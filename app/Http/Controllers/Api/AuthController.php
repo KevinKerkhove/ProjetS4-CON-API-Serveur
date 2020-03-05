@@ -66,7 +66,7 @@ class AuthController extends Controller
      * @param RegistrationFormRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    /*    public function register(RegistrationFormRequest $request)
+    public function register(RegistrationFormRequest $request)
         {
             $user = new User();
             $user->name = $request->name;
@@ -82,7 +82,7 @@ class AuthController extends Controller
                 'success'   =>  true,
                 'data'      =>  $user
             ], 200);
-        }*/
+        }
 
     /**
      * Get the token array structure.
