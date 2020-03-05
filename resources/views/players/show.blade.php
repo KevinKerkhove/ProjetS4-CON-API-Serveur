@@ -12,4 +12,9 @@
         <span>{{$player->bestScore}}</span>
         <span>{{$player->playTime}}</span>
     </div>
+    <div class="parties">
+        @foreach($parties as $p)
+            <li>{{$p->score}} {{$p->time}} {{$p->enemiesKilled}}</li>
+        @endforeach
+    </div>
 </div>
