@@ -57,7 +57,7 @@ class PlayerController extends Controller {
         try {
             DB::transaction(function () use ($request) {
                 $user = factory(User::class)->create([
-                    'name' => $request->prenom . ' ' . $request->nom,
+                    'name' => $request->username,
                     'email' => $request->email,
                     'password' => bcrypt($request->password),
                 ]);
@@ -126,9 +126,8 @@ class PlayerController extends Controller {
             Storage::disk('public')->delete($player->avatar);
             $path = $request->file('avatar')->storeAs('avatars', 'avatar_de_' . $player->id . '.' . $request->file('avatar')->extension(), 'public');
         }
-        $player->nom = $request->get('nom');
-        $player->prenom = $request->get('prenom');
-        $user->name = $request->prenom . ' ' . $request->nom;
+        $player->username = $request->get('username');
+        $user->name = $request->username;
         $user->email = $request->get('email');
         if ($request->has('password'))
             $user->password = bcrypt($request->get('password'));
