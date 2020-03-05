@@ -132,18 +132,6 @@ class PlayerController extends Controller {
         $user->email = $request->get('email');
         if ($request->has('password'))
             $user->password = bcrypt($request->get('password'));
-        if ($request->has('cv')) {
-            $player->cv = $request->get('cv');
-        }
-        if ($request->has('specialite')) {
-            $player->specialite = $request->get('specialite');
-        }
-        if ($request->has('actif')) {
-            if ($request->get('actif'))
-                $player->actif = 1;
-            else
-                $player->actif = 0;
-        }
         $player->avatar = $path;
         $player->save();
         $user->save();
