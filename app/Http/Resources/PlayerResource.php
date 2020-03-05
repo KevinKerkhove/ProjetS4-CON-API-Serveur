@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class PersonneResource extends JsonResource {
+class PlayerResource extends JsonResource {
     /**
      * Transform the resource into an array.
      *
@@ -23,11 +23,7 @@ class PersonneResource extends JsonResource {
             'username' => $this->username,
             'bestScore' => $this->bestScore,
             'user_id' => $this->user_id,
-
-            'specialite' => $this->specialite,
-            'actif' => $this->actif,
             'avatar'  => url(Storage::url($path)),
-            'user' => $this->user,
         ];
     }
 }
