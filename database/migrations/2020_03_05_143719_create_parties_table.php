@@ -17,7 +17,7 @@ class CreatePartiesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('score');
             $table->integer('time');
-            $table->integer('ennemiesKilled');
+            $table->integer('enemiesKilled');
             $table->integer('player_id');
             $table->foreign('player_id')->references('id')->on('players');
             $table->timestamps();
