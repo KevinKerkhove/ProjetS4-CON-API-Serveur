@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Modeles\Partie;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,6 +25,7 @@ class PlayerResource extends JsonResource {
             'bestScore' => $this->bestScore,
             'user_id' => $this->user_id,
             'avatar'  => url(Storage::url($path)),
+            'parties' => Partie::where('player_id',$this->id),
         ];
     }
 }
