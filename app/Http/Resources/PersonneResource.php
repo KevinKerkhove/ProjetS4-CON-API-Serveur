@@ -19,11 +19,13 @@ class PersonneResource extends JsonResource {
             $path = $this->avatar;
         return [
             'id' => $this->id,
-            'nom' => $this->nom,
-            'prenom' => $this->prenom,
+            'playTime' => $this->playTime,
+            'username' => $this->username,
+            'bestScore' => $this->bestScore,
+            'user_id' => $this->user_id,
+
             'specialite' => $this->specialite,
             'actif' => $this->actif,
-            'cv' => $this->cv,
             'avatar'  => url(Storage::url($path)),
             'user' => $this->user,
         ];
