@@ -17,6 +17,7 @@ $factory->define(Player::class, function (Faker $faker) {
         'bestScore' => $faker->numberBetween(0,5000),
         'playTime' => $faker->numberBetween(0,360000),
         'created_at' => $createAt,
+        //'user_id' => User::where('user.id','=','player.id')->get(),
         'updated_at' => $faker->dateTimeInInterval(
             $startDate = $createAt,
             $interval = $createAt->diff(new DateTime('now'))->format("%R%a days"),
