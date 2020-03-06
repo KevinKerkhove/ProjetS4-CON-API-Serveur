@@ -64,7 +64,7 @@
         </style>
     </head>
     <body>
-    <h1>Bienvenue sur la MOULAGANG</h1>
+    <h1>Chronicles of Naruberaria</h1>
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">

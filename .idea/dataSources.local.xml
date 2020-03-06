@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="kevin.avot@ipabdd" uuid="69cbc291-4182-4b62-95c4-f5d23cc087b3">
+      <database-info product="PostgreSQL" version="9.4.22" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.2.5" dbms="POSTGRES" exact-version="9.4.22" exact-driver-version="42.2">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>kevin.avot</user-name>
+      <introspection-schemas>@:@|kevin.avot:projets4</introspection-schemas>
+    </data-source>
+  </component>
+</project>
