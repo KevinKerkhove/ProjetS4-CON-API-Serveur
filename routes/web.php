@@ -11,11 +11,7 @@
 |
 */
 
-
-
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','Api\\HomeController@welcome')->name('welcome');
 
 Auth::routes();
 

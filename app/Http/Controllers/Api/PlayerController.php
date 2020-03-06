@@ -62,7 +62,7 @@ class PlayerController extends Controller {
                     'password' => bcrypt($request->password),
                 ]);
                 $player = factory(Player::class)->create([
-                    'username' => $request->username,
+                    'playerName' => $request->username,
                     'bestScore' => null,
                     'playTime' => null,
                     'user_id' => $user->id,
