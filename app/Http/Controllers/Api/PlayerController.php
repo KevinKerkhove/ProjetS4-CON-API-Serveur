@@ -63,8 +63,8 @@ class PlayerController extends Controller {
                 ]);
                 $player = factory(Player::class)->create([
                     'username' => $request->username,
-                    'bestScore' => 0,
-                    'playTime' => 0,
+                    'bestScore' => null,
+                    'playTime' => null,
                     'user_id' => $user->id,
                 ]);
                 $path = null;
