@@ -142,6 +142,7 @@ class PlayerController extends Controller {
 
     public function show($id) {
         $player = Player::find($id);
+        $parties = Partie::where('player_id','=',$id)->orderBy('score', 'desc')->get();
         if (!$player) {
             $this->data['status'] = false;
             $this->data['code'] = 422;
@@ -156,7 +157,8 @@ class PlayerController extends Controller {
             $this->data['data'] = new PlayerResource($player);
             $this->data['err'] = null;
         }
-        return response()->json($this->data, $this->data['code']);
+        //return response()->json($this->data, $this->data['code']);
+        return view('show', ['player' => $player, 'parties' => $parties]);
     }
 
     public function destroy($id)
