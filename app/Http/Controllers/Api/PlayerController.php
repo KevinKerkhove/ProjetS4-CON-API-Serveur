@@ -57,12 +57,12 @@ class PlayerController extends Controller {
         try {
             DB::transaction(function () use ($request) {
                 $user = factory(User::class)->create([
-                    'name' => $request->username,
+                    'username' => $request->username,
                     'email' => $request->email,
                     'password' => bcrypt($request->password),
                 ]);
                 $player = factory(Player::class)->create([
-                    'username' => $request->username,
+                    'playerName' => $request->username,
                     'bestScore' => null,
                     'playTime' => null,
                     'user_id' => $user->id,
@@ -108,8 +108,7 @@ class PlayerController extends Controller {
         if ($request->has('email') && $player->user->email != $request->email) {
             $validator = Validator::make($request->all(),
                 [
-                    'nom' => 'required|string',
-                    'prenom' => 'required|string',
+                    'username' => 'required|string',
                     'email' => ['required', 'email', Rule::unique('users')->ignore($user)],
                 ]);
             if ($validator->fails()) {

@@ -11,6 +11,6 @@ class HomeController extends Controller
     public function welcome() {
         $bestPlayers = Player::where('bestScore', '!=', null)->orderBy('bestScore', 'desc')->take(10)->get();
 
-        return view('welcome', $bestPlayers);
+        return view('welcome', ['bestPlayers' => $bestPlayers]);
     }
 }

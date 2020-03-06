@@ -65,6 +65,12 @@
     </head>
     <body>
     <h1>Chronicles of Naruberaria</h1>
+    <h3>Les meilleurs Joueurs:</h3>
+    <ul>
+        @foreach($bestPlayers as $player)
+            <li> {{$player->playerName}} {{$player->bestScore}}</li>
+        @endforeach
+    </ul>
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
