@@ -57,7 +57,7 @@ class PlayerController extends Controller {
         try {
             DB::transaction(function () use ($request) {
                 $user = factory(User::class)->create([
-                    'username' => $request->username,
+                    'name' => $request->username,
                     'email' => $request->email,
                     'password' => bcrypt($request->password),
                 ]);
