@@ -21,7 +21,7 @@ class PlayerResource extends JsonResource {
         return [
             'id' => $this->id,
             'playTime' => $this->playTime,
-            'username' => $this->username,
+            'playerName' => $this->playerName,
             'bestScore' => $this->bestScore,
             'user_id' => $this->user_id,
             'avatar'  => url(Storage::url($path)),
