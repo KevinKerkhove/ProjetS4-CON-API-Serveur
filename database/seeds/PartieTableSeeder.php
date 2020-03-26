@@ -1,9 +1,9 @@
 <?php
 
-use App\Modeles\Partie;
+use App\Model\Partie;
 use Illuminate\Database\Seeder;
 
-class TacheTableSeeder extends Seeder {
+class PartieTableSeeder extends Seeder {
     /**
      * Run the database seeds.
      *

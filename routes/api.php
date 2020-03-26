@@ -1,5 +1,7 @@
 <?php
 
+use App\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 /*
@@ -16,17 +18,36 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('login', 'Api\AuthController@login');
-Route::post('register', 'Api\PlayerController@store');
 
-Route::post('players', 'Api\PlayerController@store');
+Route::prefix('v2')->group(function () {
+    Route::post('login', 'Api\AuthController@login');
+    Route::post('register', 'Api\AuthController@register');
+});
 
-Route::group(['middleware' => 'auth.jwt'], function () {
+Route::prefix('v2')->middleware(['auth:api', 'role'])->group(function() {
+
+
+    // List users
+    Route::middleware(['scope:admin'])->get('/users', 'Api\UserController@index');
+    Route::middleware(['scope:admin'])->get('/user/{id}', 'Api\UserController@show');
+    Route::middleware(['scope:admin,player'])->get('players', 'Api\PlayerController@index');
+    Route::middleware(['scope:admin'])->get('players/{id}', 'Api\PlayerController@show');
+    Route::get('getPlayer', 'Api\PlayerController@getPlayer');
+
+    // Add/Edit User
+    Route::middleware(['scope:admin'])->post('/user', 'Api\UserController@create');
+    Route::middleware(['scope:admin'])->put('/user/{userId}', 'Api\UserController@update');
+    Route::middleware(['scope:admin'])->put('players/{id}', 'Api\PlayerController@update');
+    Route::middleware(['scope:admin'])->put('players', 'Api\PlayerController@update');
+
+    // Delete User
+    Route::middleware(['scope:admin'])->delete('/user/{userId}', 'Api\UserController@delete');
+    Route::middleware(['scope:admin'])->delete('player/{id}', 'Api\PlayerController@destroy');
+
     Route::post('logout', 'Api\AuthController@logout');
-    Route::get('me', 'Api\AuthController@me');
-    Route::post('refresh', 'Api\AuthController@refresh');
-    Route::get('players', 'Api\PlayerController@index');
-    Route::get('players/{id}', 'Api\PlayerController@show');
-    Route::put('players/{id}', 'Api\PlayerController@update');
-    Route::delete('players/{id}', 'Api\PlayerController@destroy');
+
+    Route::get('getUser', 'Api\AuthController@getUser');
+
+
+
 });

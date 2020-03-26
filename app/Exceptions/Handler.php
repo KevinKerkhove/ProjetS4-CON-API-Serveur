@@ -4,9 +4,10 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Shalvah\LaravelJsend\JsendExceptionFormatter;
 
-class Handler extends ExceptionHandler
-{
+class Handler extends ExceptionHandler {
+    use JsendExceptionFormatter;
     /**
      * A list of the exception types that are not reported.
      *
@@ -29,27 +30,25 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
+     * @param \Exception $exception
      * @return void
      *
      * @throws \Exception
      */
-    public function report(Exception $exception)
-    {
+    public function report(Exception $exception) {
         parent::report($exception);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception $exception
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function render($request, Exception $exception)
-    {
+    public function render($request, Exception $exception) {
         return parent::render($request, $exception);
     }
 }

@@ -11,8 +11,6 @@
 |
 */
 
-Route::get('/','Api\\HomeController@welcome')->name('welcome');
-
-Auth::routes();
-
-Route::get('/logout','UserController@logout')->name('logout');
+Route::get('/', function () {
+    return view('welcome');
+});

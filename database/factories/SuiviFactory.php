@@ -1,23 +1,20 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-
+///** @var \Illuminate\Database\Eloquent\Factory $factory */
+/*
 use App\Model;
-use App\Model\Personne;
-use App\Modeles\Player;
+use App\Model\Suivi;
 use Faker\Generator as Faker;
 
-$factory->define(Player::class, function (Faker $faker) {
+$factory->define(Suivi::class, function (Faker $faker) {
     $createAt = $faker->dateTimeInInterval(
         $startDate = '-6 months',
         $interval = '+ 180 days',
         $timezone = date_default_timezone_get()
     );
     return [
-        'nom' => $faker->lastName(),
-        'prenom' => $faker->firstName(),
-        'playTime' => $faker->time('H:i:s','now'),
-        'bestScore' => $faker->randomNumber(),
+        'titre' => substr($faker->sentence(6), 0, 70),
+        'commentaire' => $faker->paragraph,
         'created_at' => $createAt,
         'updated_at' => $faker->dateTimeInInterval(
             $startDate = $createAt,
@@ -25,4 +22,4 @@ $factory->define(Player::class, function (Faker $faker) {
             $timezone = date_default_timezone_get()
         ),
     ];
-});
+});*/

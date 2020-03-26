@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Modeles\Partie;
+use App\Model\Partie;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,12 +20,14 @@ class PlayerResource extends JsonResource {
             $path = $this->avatar;
         return [
             'id' => $this->id,
+            'nom' => $this->playerName,
+            'prenom' => $this->prenom,
             'playTime' => $this->playTime,
-            'playerName' => $this->playerName,
             'bestScore' => $this->bestScore,
             'user_id' => $this->user_id,
             'avatar'  => url(Storage::url($path)),
             'parties' => Partie::where('player_id',$this->id),
+            'user' => new UserResource($this->user),
         ];
     }
 }

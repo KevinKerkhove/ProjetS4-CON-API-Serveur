@@ -3,21 +3,24 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Model;
-use App\Model\Personne;
-use App\Modeles\Player;
+use App\Model\Partie;
 use Faker\Generator as Faker;
 
-$factory->define(Player::class, function (Faker $faker) {
+$factory->define(Partie::class, function (Faker $faker) {
     $createAt = $faker->dateTimeInInterval(
         $startDate = '-6 months',
         $interval = '+ 180 days',
         $timezone = date_default_timezone_get()
     );
     return [
-        'nom' => $faker->lastName(),
-        'prenom' => $faker->firstName(),
-        'playTime' => $faker->time('H:i:s','now'),
-        'bestScore' => $faker->randomNumber(),
+        'expiration' => $faker->dateTimeInInterval(
+            $startDate = '-6 months',
+            $interval = '+ 180 days',
+            $timezone = date_default_timezone_get()
+        ),
+        'score' => $faker->randomNumber(),
+        'time' => $faker->time('H:i:S'),
+        'ennemiesKilled' => $faker->randomNumber(2),
         'created_at' => $createAt,
         'updated_at' => $faker->dateTimeInInterval(
             $startDate = $createAt,

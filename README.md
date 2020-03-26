@@ -37,7 +37,7 @@ Version API de l'application taches que nous avons utilisé pendant les séances
     -   Une personne peut se connecté si un enregistrement dans la table user est associé avec la personne
     -   Un suivi d'exécution est créé par une personne
 
-![Le modèle de données][modele]
+![Le modèle de données](docs/images/modele.png)
 
 ### La création du système d'information
 
@@ -86,65 +86,45 @@ php artisan db:seed
 
 ## Mise en oeuvre de l'authentification
 
-Nous allons utiliser un package supplémentaire : [`tymon/jwt-auth`](https://github.com/tymondesigns/jwt-auth/tree/develop).
+Nous allons utiliser un package supplémentaire : [`passport`](https://github.com/tymondesigns/jwt-auth/tree/develop).
 
-Pour configurer notre application Laravel, nous allons suivre le tutoriel [Laravel 6 Rest API using JWT Authentication](https://www.larashout.com/laravel-6-jwt-authentication).
+Pour configurer notre application Laravel, nous allons suivre le tutoriel [Building an API in Laravel with Passport](https://medium.com/swlh/building-an-api-in-laravel-with-passport-bd17cf39109f).
 
-1.  Installation de `tymon/jwt-auth`
+*   Pour installer la librairie
 
     ```bash
-    composer require tymon/jwt-auth:dev-develop --prefer-source
+    composer require laravel/passport
     ```
-    
-1.  Choix du provider
+
+*   Pour créer les tables nécessaires à passport
 
     ```bash
-     php artisan vendor:publish
-    
-     Which provider or tag's files would you like to publish?:
-      [0 ] Publish files from all providers and tags listed below
-      [1 ] Provider: Facade\Ignition\IgnitionServiceProvider
-      [2 ] Provider: Fideloper\Proxy\TrustedProxyServiceProvider
-      [3 ] Provider: Illuminate\Foundation\Providers\FoundationServiceProvider
-      [4 ] Provider: Illuminate\Mail\MailServiceProvider
-      [5 ] Provider: Illuminate\Notifications\NotificationServiceProvider
-      [6 ] Provider: Illuminate\Pagination\PaginationServiceProvider
-      [7 ] Provider: Laravel\Tinker\TinkerServiceProvider
-      [8 ] Provider: Tymon\JWTAuth\Providers\LaravelServiceProvider
-      [9 ] Tag: config
-      [10] Tag: flare-config
-      [11] Tag: ignition-config
-      [12] Tag: laravel-errors
-      [13] Tag: laravel-mail
-      [14] Tag: laravel-notifications
-      [15] Tag: laravel-pagination
-     > 8
-    
-    Copied File [/vendor/tymon/jwt-auth/config/config.php] To [/config/jwt.php]
-    Publishing complete.
-    Publishing complete.
-    ```     
-
-1.  Génération du secret
-
-    ```bash
-     php artisan jwt:secret
+    php artisan migrate
     ```
-    
-1.  Modification de la classe User pour identification par token.
+
+*   Pour initialiser la clé de passport pour le cryptage
+
+    ```bash
+    php artisan passport:install
+    ```
+
+*   Utilisation du trait `HasApiTokens` dans la classe `User`
 
     ```php
     <?php
     
     namespace App;
     
+    use App\Model\Personne;
+    use App\Model\Role;
     use Illuminate\Contracts\Auth\MustVerifyEmail;
     use Illuminate\Foundation\Auth\User as Authenticatable;
     use Illuminate\Notifications\Notifiable;
-    use Tymon\JWTAuth\Contracts\JWTSubject;
+    use Laravel\Passport\HasApiTokens;
     
-    class User extends Authenticatable implements JWTSubject {
-        use Notifiable;
+    class User extends Authenticatable
+    {
+        use HasApiTokens, Notifiable;
     
         /**
          * The attributes that are mass assignable.
@@ -173,211 +153,443 @@ Pour configurer notre application Laravel, nous allons suivre le tutoriel [Larav
             'email_verified_at' => 'datetime',
         ];
     
-        /**
-         * Get the identifier that will be stored in the subject claim of the JWT.
-         *
-         * @return mixed
-         */
-        public function getJWTIdentifier() {
-            return $this->getKey();
+        function role() {
+            return $this->hasMany(Role::class);
         }
     
+    
+        public function personne() {
+            return $this->hasOne(Personne::class);
+        }
+    
+    }
+    ```
+
+*   Ajout des routes pour gérer le protocole OAuth 2.0
+
+    ```php
+    <?php
+    
+    namespace App\Providers;
+    
+    use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+    use Illuminate\Support\Facades\Gate;
+    use Laravel\Passport\Passport;
+    
+    class AuthServiceProvider extends ServiceProvider
+    {
         /**
-         * Return a key value array, containing any custom claims to be added to the JWT.
+         * The policy mappings for the application.
          *
-         * @return array
+         * @var array
          */
-        public function getJWTCustomClaims() {
-            return [];
+        protected $policies = [
+            // 'App\Model' => 'App\Policies\ModelPolicy',
+        ];
+    
+        /**
+         * Register any authentication / authorization services.
+         *
+         * @return void
+         */
+        public function boot()
+        {
+            $this->registerPolicies();
+            Passport::routes();
         }
     }
     ```
     
-1.  Mofigication de la méthode d'authentification dans le fichier `config/auth.php`
+*   Modification du fichier de configuration de l'authentification config/auth.php
 
-    ```
-    ...
-    'defaults' => [
-         'guard' => 'api',
-         'passwords' => 'users',
-    ],
-       
+    ```php
+    // ...
     'guards' => [
-         'web' => [
-             'driver' => 'session',
-             'provider' => 'users',
-         ],
-     
-         'api' => [
-             'driver' => 'token',
-             'provider' => 'users',
-         ],
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+            'hash' => false,
+        ],
     ],
-    ...
+    // ...
+    ```    
+    
+*   Standardisation des messages réponses : utilisation de [JSend](https://github.com/omniti-labs/jsend) et d'une implémentation  [shalvah/laravel-jsend](https://github.com/shalvah/laravel-jsend)   
+
+    ```bash
+    composer req shalvah/laravel-jsend
     ```
 
-1.  Création d'un contrôleur d'authentification 
-
-    ````bash
-    php artisan make:controller Api\\AuthController
-    ````
-    qui crée un fichier `app/Http/Controllers/Api/authController`. Modifier le code avec le contenu suivant :
     
-    ````php
+*   Création d'un contrôleur d'authentification
+
+    ```bash
+    php artisan make:controller Api\\AuthController
+    ```
+    
+    ```php
     <?php
     
     namespace App\Http\Controllers\Api;
     
-    use JWTAuth;
     use App\Http\Controllers\Controller;
+    use App\User;
     use Illuminate\Http\Request;
-    use Tymon\JWTAuth\Exceptions\JWTException;
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Validator;
     
-    class AuthController extends Controller
-    {
-        /**
-         * @var bool
-         */
-        public $loginAfterSignUp = true;
+    class AuthController extends Controller {
+        public $successStatus = 200;
     
-        /**
-         * @param Request $request
-         * @return \Illuminate\Http\JsonResponse
-         */
-        public function login(Request $request)
-        {
-            $input = $request->only('email', 'password');
-            $token = null;
+        public function register(Request $request) {
+            $validator = Validator::make($request->all(),
+                [
+                    'name' => 'required',
+                    'email' => 'required|email',
+                    'password' => 'required',
+                ]);
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 401);
+            }
+            $input = $request->all();
+            $input['password'] = bcrypt($input['password']);
+            $user = User::create($input);
+            $success['token'] = $user->createToken('Taches-api')->accessToken;
+            return jsend_success($success);
+        }
     
-            if (!$token = JWTAuth::attempt($input)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid Email or Password',
+    
+        public function login() {
+            if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
+                $user = Auth::user();
+                $success['token'] = $user->createToken('Taches-api')->accessToken;
+                return jsend_success($success);
+            } else {
+                return jsend_fail([
+                    "title" => "Unauthorised",
+                    "body" => "Nom d'utilisateur et/ou mot de passe incorrect"
                 ], 401);
             }
-    
-            return response()->json([
-                'success' => true,
-                'token' => $token,
-            ]);
         }
     
-        /**
-         * @param Request $request
-         * @return \Illuminate\Http\JsonResponse
-         * @throws \Illuminate\Validation\ValidationException
-         */
-        public function logout(Request $request)
-        {
-            $this->validate($request, [
-                'token' => 'required'
-            ]);
-    
-            try {
-                JWTAuth::invalidate($request->token);
-    
-                return response()->json([
-                    'success' => true,
-                    'message' => 'User logged out successfully'
-                ]);
-            } catch (JWTException $exception) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Sorry, the user cannot be logged out'
-                ], 500);
+        public function logout(Request $request) {
+            if (Auth::check()) {
+                $token = Auth::user()->token();
+                $token->revoke();
+                return jsend_success(['successfully logout'], 201);
             }
+            return jsend_fail([
+                "title" => "Unauthorised",
+                "body" => "Token invalid"
+            ], 401);
         }
     
-        /**
-         * @param RegistrationFormRequest $request
-         * @return \Illuminate\Http\JsonResponse
-         */
-    /*    public function register(RegistrationFormRequest $request)
-        {
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = bcrypt($request->password);
-            $user->save();
-    
-            if ($this->loginAfterSignUp) {
-                return $this->login($request);
-            }
-    
-            return response()->json([
-                'success'   =>  true,
-                'data'      =>  $user
-            ], 200);
-        }*/
-     
-       /**
-        * Get the token array structure.
-        *
-        * @param  string $token
-        *
-        * @return \Illuminate\Http\JsonResponse
-        */
-       protected function respondWithToken($token)
-       {
-           return response()->json([
-               'access_token' => $token,
-               'token_type' => 'bearer',
-               'expires_in' => auth()->factory()->getTTL() * 60
-           ]);
-       }
+        public function getUser() {
+            $user = Auth::user();
+            return jsend_success(["user" => $user], 200);
+        }
     }
-    ````
+    ```    
     
-1.  Ajouter un contrôleur pour les personnes et les users associés.
+*   Contenu du fichier routes/api.php
 
-    ````bash
-    php artisan make:controller Api\\PersonneController
-    ````    
+    ```php
+    Route::prefix('v2')->group(function () {
+        Route::post('login', 'Api\AuthController@login');
+        Route::post('register', 'Api\AuthController@register');
+    });
     
-    qui crée un fichier `app/Http/Controllers/Api/PersonneController`. Modifier le code avec le contenu suivant :
+    Route::prefix('v2')->middleware(['auth:api'])->group(function() {
     
-     
-1.  Modification du fichier `routes/api.php`    
+        Route::post('logout', 'Api\AuthController@logout');
+    
+        Route::get('getUser', 'Api\AuthController@getUser');
+        
+    });
+    ```    
+
+## Mise en oeuvre de la notion de scope
+
+*   Création d'une nouvelle classe middleware
+
+    ```bash
+    php artisan make:middleware CheckRole    
+    ```
+    
+    Ce middleware va ajouter le scope de l'utilisateur en fonction de son rôle.
+    Avec le contenu suivant :
+    
+    ```php
+    <?php
+    
+    namespace App\Http\Middleware;
+    
+    use Closure;
+    use Illuminate\Support\Facades\Log;
+    
+    class CheckRole {
+        /**
+         * Handle an incoming request.
+         *
+         * @param \Illuminate\Http\Request $request
+         * @param \Closure $next
+         * @return mixed
+         */
+        public function handle($request, Closure $next) {
+            $userRole = $request->user()->role()->first();
+            if ($userRole) {
+                // Set scope as admin/auteur/joueur based on user role
+                $request->request->add([
+                    'scope' => $userRole->role
+                ]);
+            }
+            return $next($request);
+        }
+    }   
+    ```
+    
+*   Modification de la liste des middleware dans le fichier `app/Http/Kernel.php`
 
     ````php
+    protected $routeMiddleware = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class,
+        'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
+        'role' => \App\Http\Middleware\CheckRole::class,
+    ];
+    ````
+    
+*   Ajout des scopes gérer par l'application dans le fichier `app/Providers/AuthServiceProvider.php`
+
+    ```php
+    public function boot() {
+        // ...
+        Passport::tokensCan([
+            'admin' => 'les droits de l\'admin',
+            'auteur' => 'les droits de l\'auteur',
+            'joueur' => 'les droits du joueur'
+        ]);
+    
+        Passport::setDefaultScope([
+            'joueur'
+        ]);
+    }
+    ```   
+    
+*   Modification du contrôleur `AuthController` pour gérer les scopes   
+
+    ```php
     <?php
-     
+    
+    namespace App\Http\Controllers\Api;
+    
+    use App\Http\Controllers\Controller;
+    use App\User;
     use Illuminate\Http\Request;
-     
-    /*
-    |--------------------------------------------------------------------------
-    | API Routes
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can register API routes for your application. These
-    | routes are loaded by the RouteServiceProvider within a group which
-    | is assigned the "api" middleware group. Enjoy building your API!
-    |
-    */
-     
-    Route::middleware('auth:api')->get('/user', function (Request $request) {
-        return $request->user();
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Validator;
+    
+    class AuthController extends Controller {
+        public $successStatus = 200;
+    
+        public function register(Request $request) {
+            $validator = Validator::make($request->all(),
+                [
+                    'name' => 'required',
+                    'email' => 'required|email|unique:users',
+                    'password' => 'required',
+                ]);
+            if ($validator->fails()) {
+                return jsend_fail([
+                    "title" => "Registration failed",
+                    "body" => $validator->errors()
+                ], 401);
+            }
+            $input = $request->all();
+            $input['password'] = bcrypt($input['password']);
+            $user = User::create($input);
+            $user->role()->save(factory(Role::class)->make(['user_id' => $user->id, 'role' => 'joueur']));
+            $success['token'] = $user->createToken('Taches-api', [$this->scope])->accessToken;
+            return jsend_success($success);
+        }
+    
+        public function login() {
+            if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
+                $user = Auth::user();
+                $userRole = $user->role()->first();
+                if ($userRole) {
+                    $this->scope = $userRole->role;
+                }
+                $success['token'] = $user->createToken('Taches-api', [$this->scope])->accessToken;
+                return jsend_success($success);
+            } else {
+                return jsend_fail([
+                    "title" => "Unauthorised",
+                    "body" => "Nom d'utilisateur et/ou mot de passe incorrect"
+                ], 401);
+            }
+        }
+    
+        public function logout(Request $request) {
+            if (Auth::check()) {
+                $token = Auth::user()->token();
+                $token->revoke();
+                return jsend_success(['successfully logout'], 201);
+            }
+            return jsend_fail([
+                "title" => "Unauthorised",
+                "body" => "Token invalid"
+            ], 401);
+        }
+    
+        public function getUser() {
+            $user = Auth::user();
+            return jsend_success(["user" => $user], 200);
+        }
+    }
+    ```
+    
+*   Création d'un contrôleur pour gérer les utilisateurs
+
+    ```bash
+    php artisan make:controller Api\\UserController
+    ```
+    
+    ```php
+    <?php
+    
+    namespace App\Http\Controllers\Api;
+    
+    use App\Http\Controllers\Controller;
+    use App\Model\Role;
+    use App\User;
+    use Illuminate\Database\Eloquent\ModelNotFoundException;
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Log;
+    use Illuminate\Support\Facades\Validator;
+    
+    class UserController extends Controller {
+        function index() {
+            return jsend_success(User::all());
+        }
+    
+        function create(Request $request) {
+            $validator = Validator::make($request->all(),[
+                'name' => 'required',
+                'email' => 'required|unique:users',
+                'password' => 'required|min:4'
+            ]);
+            if ($validator->fails()) {
+                return jsend_fail([
+                    "title" => "Creation failed",
+                    "body" => $validator->errors()
+                ], 422);
+            }
+            $input = $request->all();
+            $input['password'] = bcrypt($input['password']);
+            $user = User::create($input);
+            $user->role()->save(factory(Role::class)->make(['user_id' => $user->id, 'role' => 'joueur']));
+    
+            return jsend_success($user);
+        }
+    
+        function update(Request $request, $id) {
+            try {
+                $user = User::findOrFail($id);
+            } catch (ModelNotFoundException $e) {
+                return jsend_fail([
+                    "title" => "User not found.",
+                ], 422);
+            }
+    
+            $user->name = $request->get('name', $user->name);
+            $user->save();
+    
+            return jsend_success(['user'=>$user], 200);
+        }
+    
+        function show($id) {
+            try {
+                $user = User::findOrFail($id);
+                Log::info(sprintf("dans la requete modif user de nom %s", $user->email ));
+            } catch (ModelNotFoundException $e) {
+                return jsend_fail([
+                    "title" => "User not found.",
+                ], 422);
+            }
+    
+            return jsend_success(['message'=>'User updated successfully.','user'=>$user], 200);
+    
+    
+        }
+    
+        function delete($id) {
+            try {
+                $user = User::findOrFail($id);
+            } catch (ModelNotFoundException $e) {
+                return jsend_fail([
+                    "title" => "User not found.",
+                ], 422);
+            }
+            $user->delete();
+            return jsend_success(['message'=>'User deleted successfully.'], 201);
+        }
+    }
+
+    }
+    ```    
+    
+*   Modification des routes `routes/api.php` pour gérer les scopes   
+
+    ```php
+    <?php
+    
+    use App\User;
+    use Illuminate\Database\Eloquent\ModelNotFoundException;
+    use Illuminate\Http\Request;
+    
+    Route::prefix('v2')->group(function () {
+        Route::post('login', 'Api\AuthController@login');
+        Route::post('register', 'Api\AuthController@register');
     });
-    Route::post('login', 'Api\AuthController@login');
-    Route::post('register', 'Api\PersonneController@store');
     
-    Route::post('personnes', 'Api\PersonneController@store');
+    Route::prefix('v2')->middleware(['auth:api', 'role'])->group(function() {
     
-    Route::group(['middleware' => 'auth.jwt'], function () {
+        Route::middleware(['scope:admin,auteur,joueur'])->get('/user/{id}', 'Api\UserController@show');
+    
+        // List users
+        Route::middleware(['scope:admin,auteur,joueur'])->get('/users', 'Api\UserController@index');
+    
+        // Add/Edit User
+        Route::middleware(['scope:admin,auteur'])->post('/user', 'Api\UserController@create');
+    
+        Route::middleware(['scope:admin,auteur'])->put('/user/{userId}', 'Api\UserController@update');
+    
+        // Delete User
+        Route::middleware(['scope:admin'])->delete('/user/{userId}', 'Api\UserController@delete');
+    
         Route::post('logout', 'Api\AuthController@logout');
-        Route::get('me', 'Api\AuthController@me');
-        Route::post('refresh', 'Api\AuthController@refresh');
-        Route::get('personnes', 'Api\PersonneController@index');
-        Route::get('personnes/{id}', 'Api\PersonneController@show');
-        Route::put('personnes/{id}', 'Api\PersonneController@update');
-        Route::delete('personnes/{id}', 'Api\PersonneController@destroy');
+    
+        Route::get('getUser', 'Api\AuthController@getUser');
+    
     });
-    ````    
-### Gestion des permissions et des rôles
+    
+    ```
 
-Installation d'un paquetage qui gère les permissions et les rôles : [Laravel-permission](https://github.com/spatie/laravel-permission).
-
-Pour l'installation on pourra se référer à la [documentation](https://docs.spatie.be/laravel-permission/v3/introduction/), et à un article de présentation 
     
 ---
 [modele]: docs/images/modele.png  "Figure 1. Le modèle de données" {#modele  .centre height="300px" }
