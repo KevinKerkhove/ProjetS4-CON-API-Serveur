@@ -24,7 +24,6 @@ class PlayerResource extends JsonResource {
             'prenom' => $this->prenom,
             'playTime' => $this->playTime,
             'bestScore' => $this->bestScore,
-            'user_id' => $this->user_id,
             'avatar'  => url(Storage::url($path)),
             'parties' => Partie::where('player_id',$this->id),
             'user' => new UserResource($this->user),

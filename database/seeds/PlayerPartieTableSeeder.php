@@ -16,11 +16,11 @@ class PlayerPartieTableSeeder extends Seeder {
         $faker = Faker\Factory::create('fr_FR');
 
         foreach ($parties as $partie) {
-            $nbPersonnes = $faker->numberBetween($min = 1, $max = 10);
-            $id_personnes = $faker->unique()
-                ->randomElements($personnes_id, $nbPersonnes);
-            $tache->personnes()->attach($id_personnes);
-            $tache->save();
+            $nbPlayers = $faker->numberBetween($min = 1, $max = 10);
+            $id_players = $faker->unique()
+                ->randomElements($players_id, $nbPlayers);
+            $partie->personnes()->attach($id_players);
+            $partie->save();
         }
     }
 }
