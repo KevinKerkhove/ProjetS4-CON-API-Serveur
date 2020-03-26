@@ -15,6 +15,7 @@ class CreateRolesTable extends Migration {
             $table->primary(['user_id', 'role']);
             $table->integer('user_id')->unsigned();
             $table->string('role');
+            $table->integer('id')->nullable();
         });
     }
 

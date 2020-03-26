@@ -17,8 +17,8 @@ class PlayerTableSeeder extends Seeder {
         $players = factory(Player::class, 10)->make()
             ->each(function ($player) use ($faker) {
                 $user = factory(User::class)->create([
-                    'name' => $player->prenom . ' ' . $player->nom,
-                    'email' => $player->prenom . '.' . $player->nom . '@' . $faker->randomElement(['domain.fr', 'gmail.com', 'hotmail.com', 'truc.com', 'machin.fr']),
+                    'name' => $player->name,
+                    'email' => $player->name . '@' . $faker->randomElement(['domain.fr', 'gmail.com', 'hotmail.com', 'truc.com', 'machin.fr']),
                     'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
                     'email_verified_at' => now(),
                     'remember_token' => Str::random(10),
@@ -31,17 +31,15 @@ class PlayerTableSeeder extends Seeder {
             });
         // Robert Duchmol : joueur
         $user  = factory(User::class)->create([
-            'name' => 'Robert Duchmol',
-            'email' => 'robert.duchmol@domain.fr',
+            'name' => 'Robebrt Ducbhmol',
+            'email' => 'robert.duchbbmol@domain.fr',
             'password' => '$2y$10$UFYqX8c1aRFtvZ6AdlV17uesbirEwrRpCz1/fKmFZL2PXSyiHqoG2', // secret
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
         ]);
         $user->role()->save(factory(Role::class)->make(['user_id' => $user->id, 'role' => 'player']));
         $player = factory(Player::class)->make([
-            'nom' => 'Duchmol',
-            'prenom' => 'Robert',
-            'playTime' => '9:7:2',
+            'name' => 'Duchbbmol HBJHJ',
             'bestScore' => 89778,
         ]);
         $player->user_id = $user->id;
@@ -56,9 +54,7 @@ class PlayerTableSeeder extends Seeder {
         ]);
         $user->role()->save(factory(Role::class)->make(['user_id' => $user->id, 'role' => 'admin']));
         $player = factory(Player::class)->make([
-            'nom' => 'Smeagol',
-            'prenom' => '',
-            'playTime' => '1:9:2',
+            'name' => 'Smeagol',
             'bestScore' => 8278,
             'avatar' => 'avatars/gollum.jpeg',
         ]);

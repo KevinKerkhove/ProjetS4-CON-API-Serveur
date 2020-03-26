@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2cabc64a07509d5abb0436d4022201bb",
+    "content-hash": "4ec43230e6c241576d2f4a9b87ed764f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4214,21 +4214,21 @@
         },
         {
             "name": "shalvah/laravel-jsend",
-            "version": "1.3",
+            "version": "1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shalvah/laravel-jsend.git",
-                "reference": "67e7ac57ca8cc4053be93326737b0a8485c3680e"
+                "reference": "8c3e452de594852d3d85d0c961108fbe2df856a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shalvah/laravel-jsend/zipball/67e7ac57ca8cc4053be93326737b0a8485c3680e",
-                "reference": "67e7ac57ca8cc4053be93326737b0a8485c3680e",
+                "url": "https://api.github.com/repos/shalvah/laravel-jsend/zipball/8c3e452de594852d3d85d0c961108fbe2df856a5",
+                "reference": "8c3e452de594852d3d85d0c961108fbe2df856a5",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": "^5.1|^6.0",
-                "orchestra/testbench": "^3.6",
+                "laravel/framework": "^5.1|^6.0|^7.0",
+                "orchestra/testbench": "^3.6|^5.0",
                 "php": ">=5.6.4"
             },
             "require-dev": {
@@ -4260,7 +4260,7 @@
                 "json",
                 "laravel"
             ],
-            "time": "2020-01-24T00:10:10+00:00"
+            "time": "2020-03-11T19:17:04+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

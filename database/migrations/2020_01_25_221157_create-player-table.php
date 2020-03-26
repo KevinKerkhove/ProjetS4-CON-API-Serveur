@@ -13,10 +13,9 @@ class CreatePlayerTable extends Migration {
     public function up() {
         Schema::create('players', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nom', 50)->nullable(false);
-            $table->string('prenom', 50)->nullable(false);
-            $table->date('playTime')->nullable(false);
-            $table->integer('bestScore')->nullable(false);
+            $table->string('name', 50)->nullable(false);
+            $table->date('totalPlayTime')->nullable();
+            $table->integer('bestScore')->nullable();
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('avatar')->nullable(true);
@@ -30,6 +29,6 @@ class CreatePlayerTable extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('PlayerResource');
+        Schema::dropIfExists('players');
     }
 }

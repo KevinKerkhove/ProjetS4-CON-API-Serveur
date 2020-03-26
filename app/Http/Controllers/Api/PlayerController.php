@@ -48,14 +48,14 @@ class PlayerController extends Controller {
         try {
             DB::transaction(function () use ($request) {
                 $user = factory(User::class)->create([
-                    'name' => $request->prenom . ' ' . $request->nom,
+                    'name' => $request->name,
                     'email' => $request->email,
                     'password' => bcrypt($request->password),
                 ]);
                 $user->role()->save(factory(Role::class)->make(['user_id' => $user->id, 'role' => 'player']));
 
                 $player = factory(Player::class)->create([
-                    'playTime' => $request->playTime,
+                    'totalPlayTime' => $request->totalPlayTime,
                     'playerName' => $request->playerName,
                     'bestScore' => $request->bestScore,
                     'avatar' => 'avatars/anonymous.png',
@@ -89,8 +89,7 @@ class PlayerController extends Controller {
         if ($request->has('email') && $player->user->email != $request->email) {
             $validator = Validator::make($request->all(),
                 [
-                    'nom' => 'required|string',
-                    'prenom' => 'required|string',
+                    'name' => 'required|string',
                     'email' => ['required', 'email', Rule::unique('users')->ignore($user)],
                 ]);
             if ($validator->fails()) {
@@ -105,15 +104,14 @@ class PlayerController extends Controller {
             Storage::disk('public')->delete($player->avatar);
             $path = $request->file('avatar')->storeAs('avatars', 'avatar_de_' . $player->id . '.' . $request->file('avatar')->extension(), 'public');
         }
-        $player->nom = $request->get('nom');
-        $player->prenom = $request->get('prenom');
-        $user->name = $request->prenom . ' ' . $request->nom;
+        $player->name = $request->get('name');
+        $user->name = $request->name;
         $user->email = $request->get('email');
         if ($request->has('password')) {
             $user->password = bcrypt($request->get('password'));
         }
-        if ($request->has('playTime')) {
-            $player->playTime = $request->get('playTime');
+        if ($request->has('totalPlayTime')) {
+            $player->playTime = $request->get('totalPlayTime');
         }
         if ($request->has('bestScore')) {
             $player->bestScore = $request->get('bestScore');

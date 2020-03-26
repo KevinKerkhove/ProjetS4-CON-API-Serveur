@@ -13,13 +13,7 @@ $factory->define(Partie::class, function (Faker $faker) {
         $timezone = date_default_timezone_get()
     );
     return [
-        'expiration' => $faker->dateTimeInInterval(
-            $startDate = '-6 months',
-            $interval = '+ 180 days',
-            $timezone = date_default_timezone_get()
-        ),
         'score' => $faker->randomNumber(),
-        'time' => $faker->time('H:i:S'),
         'ennemiesKilled' => $faker->randomNumber(2),
         'created_at' => $createAt,
         'updated_at' => $faker->dateTimeInInterval(

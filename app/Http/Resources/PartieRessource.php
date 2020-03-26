@@ -16,7 +16,7 @@ class PartieResource extends JsonResource {
         return [
             'id' => $this->id,
             'score' => $this->score,
-            'time' => $this->time,
+            'playTime' => $this->playTime,
             'ennemiesKilled' => $this->ennemiesKilled,
             'player_id' => $this->player_id,
         ];

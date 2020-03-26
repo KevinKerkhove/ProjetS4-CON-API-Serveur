@@ -23,8 +23,6 @@ class AuthController extends Controller {
     public function register(Request $request) {
         $validator = Validator::make($request->all(),
             [
-                'nom' => 'required',
-                'prenom' => 'required',
                 'name' => 'required',
                 'email' => 'required|email|unique:users',
                 'password' => 'required',
@@ -43,9 +41,8 @@ class AuthController extends Controller {
             $user = User::create($input);
             $user->role()->save(factory(Role::class)->make(['user_id' => $user->id, 'role' => 'player']));
             $player = factory(Player::class)->create([
-                'nom' => $request->nom,
-                'prenom' => $request->prenom,
-                'playTime' => $request->playTime,
+                'name' => $request->name,
+                'totalPlayTime' => $request->totalPlayTime,
                 'bestScore' => $request->bestScore,
                 'avatar' => 'avatars/anonymous.png',
                 'user_id' => $user->id,

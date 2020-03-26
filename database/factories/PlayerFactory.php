@@ -14,9 +14,7 @@ $factory->define(Player::class, function (Faker $faker) {
         $timezone = date_default_timezone_get()
     );
     return [
-        'nom' => $faker->lastName(),
-        'prenom' => $faker->firstName(),
-        'playTime' => $faker->time('H:i:s','now'),
+        'name' => $faker->name(),
         'bestScore' => $faker->randomNumber(),
         'created_at' => $createAt,
         'updated_at' => $faker->dateTimeInInterval(

@@ -11,10 +11,10 @@ class CreatePartieTable extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('partie', function (Blueprint $table) {
+        Schema::create('parties', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('score')->nullable();
-            $table->date('time')->nullable();
+            $table->date('playTime')->nullable();
             $table->integer('ennemiesKilled')->nullable();
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreatePartieTable extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('Partie');
+        Schema::dropIfExists('parties');
     }
 }

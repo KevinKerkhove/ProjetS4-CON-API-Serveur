@@ -17,8 +17,8 @@ class UsersTableSeeder extends Seeder {
             });
 
         $user = factory(App\User::class)->create([
-            'name' => 'Robert Duchmol',
-            'email' => 'robert.duchmol@domain.fr',
+            'name' => 'Roberft Ducfhmol',
+            'email' => 'robfert.duchmol@dofmain.fr',
             'email_verified_at' => now(),
             'password' => '$2y$10$DjPwcE/APOvpnc6QKSlaNuZ0pKeKS2gysCrCWEcTx9uZzZu8x66UG', //secret
             'remember_token' => Str::random(10),

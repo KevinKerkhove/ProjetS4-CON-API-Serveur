@@ -20,9 +20,8 @@ class PlayerResource extends JsonResource {
             $path = $this->avatar;
         return [
             'id' => $this->id,
-            'nom' => $this->playerName,
-            'prenom' => $this->prenom,
-            'playTime' => $this->playTime,
+            'name' => $this->name,
+            'totalPlayTime' => $this->totalPlayTime,
             'bestScore' => $this->bestScore,
             'avatar'  => url(Storage::url($path)),
             'parties' => Partie::where('player_id',$this->id),

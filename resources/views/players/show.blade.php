@@ -10,7 +10,7 @@
     </div>
     <div class="stats">
         <span>{{$player->bestScore}}</span>
-        <span>{{$player->playTime}}</span>
+        <span>{{$player->totalPlayTime}}</span>
     </div>
     <div class="parties">
         @foreach($parties as $p)
