@@ -14,7 +14,7 @@ class CreatePlayerPartieTable extends Migration {
         Schema::create('player-partie', function (Blueprint $table) {
             $table->bigInteger('player_id')->unsigned();
             $table->bigInteger('partie_id')->unsigned();
-            $table->foreign('player_id')->references('id')->on('player')->onDelete('cascade');
+            $table->foreign('player_id')->references('id')->on('players')->onDelete('cascade');
             $table->foreign('partie_id')->references('id')->on('partie')->onDelete('cascade');
         });
     }
