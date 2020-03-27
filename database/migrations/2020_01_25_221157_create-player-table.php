@@ -18,7 +18,6 @@ class CreatePlayerTable extends Migration {
             $table->integer('bestScore')->nullable();
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('avatar')->nullable(false)->default("./docs/image/avatars-exemples/anonymous.png");
             $table->timestamps();
         });
     }
