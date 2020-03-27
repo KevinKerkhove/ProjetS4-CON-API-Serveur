@@ -56,7 +56,7 @@ class PlayerTableSeeder extends Seeder {
         $player = factory(Player::class)->make([
             'name' => 'Smeagol',
             'bestScore' => 8278,
-            'avatar' => 'avatars/gollum.jpeg',
+            'avatar' => 'avatars/avatar_de_12.png',
         ]);
         $player->user_id = $user->id;
         $player->save();
