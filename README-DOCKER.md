@@ -36,7 +36,7 @@ docker ps
 CONTAINER ID        IMAGE                     COMMAND                  CREATED              STATUS              PORTS                                        NAMES
 ba3084af6fcc        nginx:alpine              "nginx -g 'daemon of…"   About a minute ago   Up About a minute   0.0.0.0:443->443/tcp, 0.0.0.0:8080->80/tcp   webserver
 0afa59a4ef7b        mariadb                   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:8306->3306/tcp                       db
-10d6b3d00e95        taches-api-passport_app   "docker-php-entrypoi…"   About a minute ago   Up About a minute   9000/tcp                                     app
+10d6b3d00e95        api-laravel_app   "docker-php-entrypoi…"   About a minute ago   Up About a minute   9000/tcp                                     app
 ````
 
 ## Configuration de votre application pour docker
@@ -150,7 +150,7 @@ Nous allons utiliser le mécanisme de migration des tables proposé par laravel.
 1.  Test de la connexion avec la base de données
 
     ```bash
-    hemery@leni-150-226 taches-api-passport % docker-compose exec app php artisan tinker
+    hemery@leni-150-226 api-laravel % docker-compose exec app php artisan tinker
     Psy Shell v0.9.12 (PHP 7.3.14 — cli) by Justin Hileman
     >>> \DB::table('migrations')->get();
     => Illuminate\Support\Collection {#3068
@@ -229,7 +229,7 @@ Nous allons utiliser le mécanisme de migration des tables proposé par laravel.
 1.  Clé pour passport    
 
     ```bash
-    hemery@leni-150-226 taches-api-passport % docker-compose exec app php artisan passport:install
+    hemery@leni-150-226 api-laravel % docker-compose exec app php artisan passport:install
     Encryption keys already exist. Use the --force option to overwrite them.
     Personal access client created successfully.
     Client ID: 1
@@ -240,7 +240,7 @@ Nous allons utiliser le mécanisme de migration des tables proposé par laravel.
     ``` 
 
 ```bash
-hemery@leni-150-226 taches-api-passport % docker-compose exec app php artisan db:seed         
+hemery@leni-150-226 api-laravel % docker-compose exec app php artisan db:seed         
 Seeding: PersonneTableSeeder
 Seeded:  PersonneTableSeeder (0.38 seconds)
 Seeding: TacheTableSeeder

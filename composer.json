@@ -15,7 +15,8 @@
         "laravel/passport": "^8.4",
         "laravel/tinker": "^2.0",
         "shalvah/laravel-jsend": "^1.4",
-        "tymon/jwt-auth": "dev-develop"
+        "tymon/jwt-auth": "dev-develop",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
