@@ -27,18 +27,17 @@ Route::prefix('v2')->group(function () {
 Route::prefix('v2')->middleware(['auth:api', 'role'])->group(function() {
 
 
-    // List users
-    Route::middleware(['scope:admin'])->get('/users', 'Api\UserController@index');
+    // List players
     Route::middleware(['scope:admin'])->get('/user/{id}', 'Api\UserController@show');
-    Route::middleware(['scope:admin,player'])->get('players', 'Api\PlayerController@index');
-    Route::middleware(['scope:admin'])->get('players/{id}', 'Api\PlayerController@show');
+    Route::middleware(['scope:admin,auteur,player'])->get('players', 'Api\PlayerController@index');
+    Route::middleware(['scope:admin,auteur'])->get('players/{id}', 'Api\PlayerController@show');
     Route::get('getPlayer', 'Api\PlayerController@getPlayer');
 
     // Add/Edit User
-    Route::middleware(['scope:admin'])->post('/user', 'Api\UserController@create');
-    Route::middleware(['scope:admin'])->put('/user/{userId}', 'Api\UserController@update');
-    Route::middleware(['scope:admin'])->put('players/{id}', 'Api\PlayerController@update');
-    Route::middleware(['scope:admin'])->put('players', 'Api\PlayerController@update');
+    Route::middleware(['scope:admin,auteur'])->post('/user', 'Api\UserController@create');
+    Route::middleware(['scope:admin,auteur'])->put('/user/{userId}', 'Api\UserController@update');
+    Route::middleware(['scope:admin,auteur'])->put('players/{id}', 'Api\PlayerController@update');
+    Route::middleware(['scope:admin,auteur'])->put('players', 'Api\PlayerController@update');
 
     // Delete User
     Route::middleware(['scope:admin'])->delete('/user/{userId}', 'Api\UserController@delete');
@@ -47,7 +46,6 @@ Route::prefix('v2')->middleware(['auth:api', 'role'])->group(function() {
     Route::post('logout', 'Api\AuthController@logout');
 
     Route::get('getUser', 'Api\AuthController@getUser');
-
 
 
 });

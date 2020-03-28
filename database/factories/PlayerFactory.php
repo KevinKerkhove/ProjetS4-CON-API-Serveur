@@ -16,6 +16,8 @@ $factory->define(Player::class, function (Faker $faker) {
     return [
         'name' => $faker->name(),
         'bestScore' => $faker->randomNumber(),
+        'totalPlayTime' => $faker->time('H:i:s'),
+        'bio' => $faker->text(),
         'created_at' => $createAt,
         'updated_at' => $faker->dateTimeInInterval(
             $startDate = $createAt,

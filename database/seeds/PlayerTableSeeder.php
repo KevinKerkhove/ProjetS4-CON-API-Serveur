@@ -18,7 +18,7 @@ class PlayerTableSeeder extends Seeder {
             ->each(function ($player) use ($faker) {
                 $user = factory(User::class)->create([
                     'name' => $player->name,
-                    'email' => $player->name . '@' . $faker->randomElement(['domain.fr', 'gmail.com', 'hotmail.com', 'truc.com', 'machin.fr']),
+                    'email' => $faker->firstName . $faker->lastName . '@' . $faker->randomElement(['domain.fr', 'gmail.com', 'hotmail.com', 'truc.com', 'machin.fr']),
                     'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
                     'email_verified_at' => now(),
                     'remember_token' => Str::random(10),
@@ -41,9 +41,11 @@ class PlayerTableSeeder extends Seeder {
         $player = factory(Player::class)->make([
             'name' => 'Duchbbmol HBJHJ',
             'bestScore' => 89778,
+            'bio' => 'Bonjour, j\'aime jouer aux jeux-vidéos player',
         ]);
         $player->user_id = $user->id;
         $player->save();
+
         // Gollum : admin
         $user = factory(User::class)->create([
             'name' => 'Gollum',
@@ -56,7 +58,26 @@ class PlayerTableSeeder extends Seeder {
         $player = factory(Player::class)->make([
             'name' => 'Smeagol',
             'bestScore' => 8278,
+            'bio' => 'Bonjour, j\'adore jouer aux jeux-vidéos admin',
             'avatar' => 'avatars/avatar_de_12.png',
+        ]);
+        $player->user_id = $user->id;
+        $player->save();
+
+        // Gérard Martin : auteur
+        $user = factory(User::class)->create([
+            'name' => 'Gérard Martin',
+            'email' => 'gerard.martin@domain.fr',
+            'password' => '$2y$10$UFYqX8c1aRFtvZ6AdlV17uesbirEwrRpCz1/fKmFZL2PXSyiHqoG2', // secret
+            'email_verified_at' => now(),
+            'remember_token' => Str::random(10),
+        ]);
+        $user->role()->save(factory(Role::class)->make(['user_id' => $user->id, 'role' => 'auteur']));
+        $player = factory(Player::class)->make([
+            'name' => 'Martin Pecheur',
+            'bestScore' => 5675,
+            'bio' => 'Bonjour, j\'aime jouer aux jeux-vidéos auteur',
+            'totalPlayTime' => '29:12:32',
         ]);
         $player->user_id = $user->id;
         $player->save();

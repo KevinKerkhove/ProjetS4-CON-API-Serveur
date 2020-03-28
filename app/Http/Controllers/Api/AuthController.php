@@ -44,6 +44,7 @@ class AuthController extends Controller {
                 'name' => $request->name,
                 'totalPlayTime' => $request->totalPlayTime,
                 'bestScore' => $request->bestScore,
+                'bio' => $request->bio,
                 'avatar' => 'avatars/anonymous.png',
                 'user_id' => $user->id,
             ]);

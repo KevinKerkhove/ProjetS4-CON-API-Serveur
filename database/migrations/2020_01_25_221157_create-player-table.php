@@ -14,10 +14,11 @@ class CreatePlayerTable extends Migration {
         Schema::create('players', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 50)->nullable(false);
-            $table->date('totalPlayTime')->nullable();
+            $table->time('totalPlayTime')->nullable();
             $table->integer('bestScore')->nullable();
+            $table->text('bio')->nullable();
             $table->string('avatar')->nullable();
-            $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

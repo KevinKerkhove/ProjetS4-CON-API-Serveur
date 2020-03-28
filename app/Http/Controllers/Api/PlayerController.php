@@ -56,8 +56,9 @@ class PlayerController extends Controller {
 
                 $player = factory(Player::class)->create([
                     'totalPlayTime' => $request->totalPlayTime,
-                    'playerName' => $request->playerName,
+                    'name' => $request->name,
                     'bestScore' => $request->bestScore,
+                    'bio' => $request->bio,
                     'avatar' => 'avatars/anonymous.png',
                     'user_id' => $user->id,
                 ]);
@@ -115,6 +116,9 @@ class PlayerController extends Controller {
         }
         if ($request->has('bestScore')) {
             $player->bestScore = $request->get('bestScore');
+        }
+        if ($request->has('bio')) {
+            $player->bio = $request->get('bio');
         }
         $player->avatar = $path;
         $player->save();

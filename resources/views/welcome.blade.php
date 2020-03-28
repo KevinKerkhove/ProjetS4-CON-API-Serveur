@@ -68,7 +68,7 @@
     <h3>Les meilleurs Joueurs:</h3>
     <ul>
         @foreach($bestPlayers as $player)
-            <li> {{$player->playerName}} {{$player->bestScore}}</li>
+            <li> {{$player->name}} {{$player->bestScore}}</li>
         @endforeach
     </ul>
         <div class="flex-center position-ref full-height">
