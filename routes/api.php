@@ -30,7 +30,7 @@ Route::prefix('v2')->middleware(['auth:api', 'role'])->group(function() {
     // List players
     Route::middleware(['scope:admin,player,auteur'])->get('/user/{id}', 'Api\UserController@show');
     Route::middleware(['scope:admin,auteur,player'])->get('players', 'Api\PlayerController@index');
-    Route::middleware(['scope:admin,auteur'])->get('players/{id}', 'Api\PlayerController@show');
+    Route::middleware(['scope:admin,auteur,player'])->get('players/{id}', 'Api\PlayerController@show');
     Route::get('getPlayer', 'Api\PlayerController@getPlayer');
 
     // Add/Edit User
